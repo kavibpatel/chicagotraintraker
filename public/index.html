@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Train Map</title>
-    <span style="color:#30C5FF"><h1 class="map-title">Chicago 'L' Train Tracker</h1></span>
+    <h1 class="map-title">Chicago 'L' Train Tracker</h1>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
         body {
@@ -16,14 +16,18 @@
         }
         .map-title{
             color:#30C5FF;
-            margin: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 10px;
         }
 
         .map-container {
-            width: 400px;
-            height: 430px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 10px;
             margin-top: -15px;
-            stroke-width: 1px;
             border: 2px solid transparent;
         }
     </style>
@@ -40,8 +44,11 @@
                             y:41.7904, x:-87.6004, 
                             color:"#800000"}]
 
-        const width = 440;
-        const height = 425;
+        const width = window.innerWidth;
+        const height = window.innerHeight - 100;
+
+        console.log("width:", width);
+
 
         const svg = d3.select("#map")
             .append("svg")
@@ -50,8 +57,8 @@
 
         const projection = d3.geoMercator()
             .center([-87.7, 41.85])
-            .scale(50000)
-            .translate([width / 2, height / 2]);
+            .scale(width * 50)
+            .translate([width / 2 + 30, height / 2]);
 
         const path = d3.geoPath().projection(projection);
 
@@ -85,7 +92,7 @@
                 .attr("opacity", 1)
                 .attr("cx", d => projection([d.x, d.y])[0])
                 .attr("cy", d => projection([d.x, d.y])[1])
-                .attr("r", "5px")
+                .attr("r", "8px")
                 .attr("stroke", "white")  // Border color
                 .attr("stroke-width", 1) // Border width
 
@@ -140,7 +147,7 @@
                         trainCircles.join("circle")
                             .attr("class", "train")
                             .attr("id",d => `train-${d.rn}`)
-                            .attr("r", 3)
+                            .attr("r", width / 360)
                             .attr("fill", d => trainColor(d.routeName))
                             .merge(trainCircles)
                             .attr("cx", d => projection([+d.lon, +d.lat])[0])
@@ -153,7 +160,7 @@
 
             // Run and refresh trains
             plotLiveTrains();
-            setInterval(plotLiveTrains, 1000);
+            setInterval(plotLiveTrains, 5000);
         }).catch(error => {
             console.error("Error loading ZIP Code GeoJSON:", error);
         });
