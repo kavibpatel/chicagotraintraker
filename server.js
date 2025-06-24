@@ -1,5 +1,9 @@
 // server.js (ES Module version)
 
+/* RUN THESE FIRST */
+//npm install
+// node server.js
+
 import express from 'express';
 import fetch from 'node-fetch';
 
